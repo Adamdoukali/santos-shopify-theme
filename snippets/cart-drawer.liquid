@@ -3,28 +3,52 @@
   <div class="site-cart__container">
     <div class="site-cart__header">
       <h3 class="ff-heading">Votre Panier (<span id="cart-drawer-count">{{ cart.item_count }}</span>)</h3>
-      <button class="site-cart__close" onclick="closeCart()" aria-label="Fermer">✕</button>
+      <button class="site-cart__close" onclick="closeCart()" aria-label="Fermer le panier">✕</button>
     </div>
     <div class="site-cart__freeship">
       <span>Livraison express Santos offerte dès 1 000 MAD d'achats</span>
     </div>
-    <div class="site-cart__items">
-      {% for item in cart.items %}
-        <div class="cart-item">
-          <img src="{{ item.image | img_url: '200x' }}" alt="{{ item.title }}">
-          <div class="cart-item__info">
-            <h4>{{ item.product.title }}</h4>
-            <div class="cart-item__meta">{{ item.variant.title }}</div>
-            <div class="cart-item__qty">Qté: {{ item.quantity }}</div>
-          </div>
-          <div class="cart-item__price">{{ item.final_line_price | money }}</div>
+    
+    <div class="site-cart__items" id="cart-items-container">
+      {% if cart.item_count == 0 %}
+        <div style="text-align: center; padding: 48px 20px; color: #888;">
+          <p style="font-size: 15px; margin-bottom: 16px;">Votre panier est actuellement vide.</p>
+          <a href="/collections/all" class="btn --link" onclick="closeCart()">Découvrir nos créations</a>
         </div>
-      {% endfor %}
+      {% else %}
+        <div style="display: flex; justify-content: flex-end; padding: 6px 16px;">
+          <button type="button" class="cart-clear-btn" onclick="clearCartAjax()">Vider le panier</button>
+        </div>
+        {% for item in cart.items %}
+          <div class="cart-item" data-key="{{ item.key }}">
+            <img src="{{ item.image | img_url: '200x' }}" alt="{{ item.title }}">
+            <div class="cart-item__info">
+              <h4>{{ item.product.title }}</h4>
+              {% unless item.product.has_only_default_variant %}
+                <div class="cart-item__meta">{{ item.variant.title }}</div>
+              {% endunless %}
+              <div class="cart-item__actions">
+                <div class="cart-item__qty">
+                  <button type="button" onclick="updateItemQtyAjax('{{ item.key }}', {{ item.quantity | minus: 1 }})" aria-label="Diminuer">−</button>
+                  <span>{{ item.quantity }}</span>
+                  <button type="button" onclick="updateItemQtyAjax('{{ item.key }}', {{ item.quantity | plus: 1 }})" aria-label="Augmenter">+</button>
+                </div>
+                <button type="button" class="cart-item__remove" onclick="removeItemAjax('{{ item.key }}')" aria-label="Supprimer du panier">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3L9 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  Supprimer
+                </button>
+              </div>
+            </div>
+            <div class="cart-item__price">{{ item.final_line_price | money }}</div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
+
     <div class="site-cart__footer">
       <div class="cart-subtotal">
         <span>Sous-total</span>
-        <span>{{ cart.total_price | money }}</span>
+        <span id="cart-drawer-subtotal">{{ cart.total_price | money }}</span>
       </div>
       <a href="/checkout" class="btn-checkout" style="display:block; text-align:center; text-decoration:none;">Commander en Toute Sécurité</a>
     </div>

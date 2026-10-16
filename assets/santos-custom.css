@@ -1139,10 +1139,17 @@ h1, h2, h3, .ff-heading {
   color: #666;
   margin: 0 0 8px 0;
 }
+.cart-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
 .cart-item__qty {
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--color-border);
+  border-radius: 2px;
 }
 .cart-item__qty button {
   background: none;
@@ -1154,6 +1161,37 @@ h1, h2, h3, .ff-heading {
 .cart-item__qty span {
   padding: 0 8px;
   font-size: 12px;
+}
+.cart-item__remove {
+  background: none;
+  border: none;
+  color: #888888;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+.cart-item__remove:hover {
+  color: #cc0000;
+}
+.cart-clear-btn {
+  background: none;
+  border: none;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #888888;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+.cart-clear-btn:hover {
+  color: #cc0000;
 }
 .cart-item__price {
   font-size: 14px;

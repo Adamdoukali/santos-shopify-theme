@@ -23,6 +23,7 @@
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    if (window.refreshCartDrawer) window.refreshCartDrawer();
   };
 
   window.closeCart = function () {
@@ -140,6 +141,114 @@
     document.body.style.overflow = '';
   };
 
+  // --- AJAX Cart Management ---
+  window.refreshCartDrawer = function () {
+    fetch('/cart.js')
+      .then(res => res.json())
+      .then(cart => {
+        const headerBadge = document.getElementById('header-cart-count');
+        if (headerBadge) headerBadge.textContent = cart.item_count;
+        const drawerCount = document.getElementById('cart-drawer-count');
+        if (drawerCount) drawerCount.textContent = cart.item_count;
+
+        const subtotal = document.getElementById('cart-drawer-subtotal');
+        if (subtotal) {
+          subtotal.textContent = (cart.total_price / 100).toFixed(2) + ' MAD';
+        }
+
+        const container = document.getElementById('cart-items-container');
+        if (!container) return;
+
+        if (cart.items.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 20px; color: #888;">
+              <p style="font-size: 15px; margin-bottom: 16px;">Votre panier est actuellement vide.</p>
+              <button type="button" class="btn --link" onclick="closeCart()">Découvrir nos créations</button>
+            </div>
+          `;
+          return;
+        }
+
+        let html = `
+          <div style="display: flex; justify-content: flex-end; padding: 6px 16px;">
+            <button type="button" class="cart-clear-btn" onclick="clearCartAjax()">Vider le panier</button>
+          </div>
+        `;
+
+        cart.items.forEach(item => {
+          const itemPrice = (item.final_line_price / 100).toFixed(2);
+          html += `
+            <div class="cart-item" data-key="${item.key}">
+              <img src="${item.image || ''}" alt="${item.title}">
+              <div class="cart-item__info">
+                <h4>${item.product_title || item.title}</h4>
+                ${item.variant_title && item.variant_title !== 'Default Title' ? `<div class="cart-item__meta">${item.variant_title}</div>` : ''}
+                <div class="cart-item__actions">
+                  <div class="cart-item__qty">
+                    <button type="button" onclick="updateItemQtyAjax('${item.key}', ${item.quantity - 1})" aria-label="Diminuer">−</button>
+                    <span>${item.quantity}</span>
+                    <button type="button" onclick="updateItemQtyAjax('${item.key}', ${item.quantity + 1})" aria-label="Augmenter">+</button>
+                  </div>
+                  <button type="button" class="cart-item__remove" onclick="removeItemAjax('${item.key}')" aria-label="Supprimer">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3L9 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                    Supprimer
+                  </button>
+                </div>
+              </div>
+              <div class="cart-item__price">${itemPrice} MAD</div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      })
+      .catch(err => console.error('Error refreshing cart:', err));
+  };
+
+  window.removeItemAjax = function (key) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: 0 })
+    })
+      .then(res => res.json())
+      .then(() => {
+        window.showToast('Article retiré du panier.');
+        window.refreshCartDrawer();
+      })
+      .catch(err => {
+        console.error('Error removing item:', err);
+        window.showToast('Erreur lors de la suppression.');
+      });
+  };
+
+  window.updateItemQtyAjax = function (key, qty) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: Math.max(0, qty) })
+    })
+      .then(res => res.json())
+      .then(() => {
+        window.refreshCartDrawer();
+      })
+      .catch(err => console.error('Error updating qty:', err));
+  };
+
+  window.clearCartAjax = function () {
+    if (!confirm('Voulez-vous vraiment vider l\'ensemble de votre panier ?')) return;
+    fetch('/cart/clear.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(() => {
+        window.showToast('Votre panier a été vidé.');
+        window.refreshCartDrawer();
+      })
+      .catch(err => console.error('Error clearing cart:', err));
+  };
+
   // --- AJAX Add to Cart ---
   window.addToCartAjax = function (variantId, qty = 1) {
     fetch('/cart/add.js', {
@@ -151,15 +260,7 @@
       .then(item => {
         window.closeQuickView();
         window.showToast(`« ${item.title} » ajouté au panier Santos.`);
-        // Refresh cart count
-        fetch('/cart.js')
-          .then(r => r.json())
-          .then(cart => {
-            const badge = document.getElementById('header-cart-count');
-            if (badge) badge.textContent = cart.item_count;
-            const drawerCount = document.getElementById('cart-drawer-count');
-            if (drawerCount) drawerCount.textContent = cart.item_count;
-          });
+        window.refreshCartDrawer();
         window.openCart();
       })
       .catch(err => {
