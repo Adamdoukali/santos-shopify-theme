@@ -1,0 +1,32 @@
+<div class="site-cart" id="cart-drawer" aria-hidden="true">
+  <div class="site-cart__backdrop" onclick="closeCart()"></div>
+  <div class="site-cart__container">
+    <div class="site-cart__header">
+      <h3 class="ff-heading">Votre Panier (<span id="cart-drawer-count">{{ cart.item_count }}</span>)</h3>
+      <button class="site-cart__close" onclick="closeCart()" aria-label="Fermer">✕</button>
+    </div>
+    <div class="site-cart__freeship">
+      <span>Livraison express Santos offerte dès 1 000 MAD d'achats</span>
+    </div>
+    <div class="site-cart__items">
+      {% for item in cart.items %}
+        <div class="cart-item">
+          <img src="{{ item.image | img_url: '200x' }}" alt="{{ item.title }}">
+          <div class="cart-item__info">
+            <h4>{{ item.product.title }}</h4>
+            <div class="cart-item__meta">{{ item.variant.title }}</div>
+            <div class="cart-item__qty">Qté: {{ item.quantity }}</div>
+          </div>
+          <div class="cart-item__price">{{ item.final_line_price | money }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="site-cart__footer">
+      <div class="cart-subtotal">
+        <span>Sous-total</span>
+        <span>{{ cart.total_price | money }}</span>
+      </div>
+      <a href="/checkout" class="btn-checkout" style="display:block; text-align:center; text-decoration:none;">Commander en Toute Sécurité</a>
+    </div>
+  </div>
+</div>

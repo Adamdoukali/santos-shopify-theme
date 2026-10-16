@@ -1,0 +1,215 @@
+<main class="collection-page" role="main">
+  <div class="collection-container">
+    <div class="collection-header__inner">
+      <div>
+        <h1 class="collection-title" id="page-collection-title">
+          {% if collection.handle == 'all' or collection.handle == blank %}
+            Toutes les Pièces Santos
+          {% elsif collection.handle == 'ensembles' %}
+            Ensembles & Tailleurs Couture
+          {% elsif collection.handle == 'robes' %}
+            Robes & Combinaisons
+          {% elsif collection.handle == 'jeans' %}
+            Denim & Jeans Santos
+          {% else %}
+            {{ collection.title }}
+          {% endif %}
+        </h1>
+        <div class="collection-count" id="collection-count-badge">{{ collection.products_count }} créations couture</div>
+      </div>
+      <a href="/" class="btn --link">Retour à l'Accueil</a>
+    </div>
+
+    <!-- Interactive Category Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-tabs" id="collection-filter-tabs">
+        <button class="filter-tab {% if collection.handle == 'all' or collection.handle == blank %}is-active{% endif %}" data-filter="all" onclick="setCollectionFilter('all', this)">
+          Tous ({{ collection.products_count }})
+        </button>
+        <button class="filter-tab" data-filter="MANTEAUX" onclick="setCollectionFilter('MANTEAUX', this)">
+          Manteaux & Trenchs
+        </button>
+        <button class="filter-tab {% if collection.handle == 'ensembles' %}is-active{% endif %}" data-filter="ENSEMBLES" onclick="setCollectionFilter('ENSEMBLES', this)">
+          Ensembles & Tailleurs
+        </button>
+        <button class="filter-tab {% if collection.handle == 'robes' %}is-active{% endif %}" data-filter="ROBES" onclick="setCollectionFilter('ROBES', this)">
+          Robes & Combinaisons
+        </button>
+        <button class="filter-tab {% if collection.handle == 'jeans' %}is-active{% endif %}" data-filter="JEANS" onclick="setCollectionFilter('JEANS', this)">
+          Denim & Jeans
+        </button>
+        <button class="filter-tab {% if collection.handle == 'tops-bodys' %}is-active{% endif %}" data-filter="TOPS | BODYS" onclick="setCollectionFilter('TOPS | BODYS', this)">
+          Tops & Bodys
+        </button>
+      </div>
+
+      <div>
+        <select class="sort-select" id="collection-sort-select" onchange="sortCollection(this.value)">
+          <option value="featured">Sélection Santos</option>
+          <option value="price-asc">Prix: Croissant</option>
+          <option value="price-desc">Prix: Décroissant</option>
+          <option value="name-asc">Nom: A-Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Compact 4-Card Responsive Product Grid -->
+    <div class="product-grid" id="shopify-product-grid">
+      {% for product in collection.products %}
+        {% assign cat = 'TOPS | BODYS' %}
+        {% assign badge_text = 'Santos' %}
+        {% assign t = product.title | downcase %}
+
+        {% if t contains 'robe' or t contains 'dress' %}
+          {% assign cat = 'ROBES' %}
+          {% assign badge_text = 'Robe' %}
+        {% elsif t contains 'ensemble' or t contains 'blazer' or t contains 'combinaison' or t contains 'suit' %}
+          {% assign cat = 'ENSEMBLES' %}
+          {% assign badge_text = 'Ensemble' %}
+        {% elsif t contains 'jeans' or t contains 'denim' %}
+          {% assign cat = 'JEANS' %}
+          {% assign badge_text = 'Denim' %}
+        {% elsif t contains 'manteco' or t contains 'trench' or t contains 'trensh' or t contains 'coat' or t contains 'manteau' or t contains 'doudoune' or t contains 'jacket' or product.type == 'Coat' %}
+          {% assign cat = 'MANTEAUX' %}
+          {% if t contains 'manteco' %}
+            {% assign badge_text = 'Manteco' %}
+          {% else %}
+            {% assign badge_text = 'Manteau' %}
+          {% endif %}
+        {% endif %}
+
+        {% assign card_image = product.featured_image %}
+        {% if card_image == blank and product.images.size > 0 %}
+          {% assign card_image = product.images.first %}
+        {% endif %}
+
+        <article class="product-card" data-category="{{ cat }}" data-title="{{ product.title | escape }}" data-price="{{ product.price }}" data-tags="{{ product.tags | join: ',' | downcase }}" data-handle="{{ product.handle }}">
+          <a href="{{ product.url }}" class="product-card__thumbnail">
+            <span class="product-card__badge">{{ badge_text }}</span>
+            {% if card_image != blank %}
+              <img class="product-card__img" src="{{ card_image | img_url: '600x' }}" alt="{{ product.title | escape }}" loading="lazy">
+            {% else %}
+              {% if t contains 'trensh' %}
+                <img class="product-card__img" src="{{ '10022082576674_0_DSC00933.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% elsif t contains 'vale jacket' or t contains 'true avenue' %}
+                <img class="product-card__img" src="{{ '10018427765026_0_DSC00521.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% elsif t contains 'fleece' or t contains 'magic' %}
+                <img class="product-card__img" src="{{ '10018397782306_0_DSC00819.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% else %}
+                <img class="product-card__img" src="{{ '10022106595618_0_DSC00749.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% endif %}
+            {% endif %}
+
+            <button class="product-card__quickadd" type="button" onclick="event.preventDefault(); if(window.openQuickView) { openQuickView('{{ product.handle }}'); } else { window.location.href='{{ product.url }}'; }">
+              Aperçu Rapide
+            </button>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">
+              <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">{{ product.title }}</a>
+            </h3>
+            <p class="product-card__price">{{ product.price | money }}</p>
+          </div>
+        </article>
+      {% endfor %}
+
+      <!-- Empty State -->
+      <div id="no-products-msg" style="display: none; grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+        <h3 style="font-size: 18px; font-weight: 400; margin-bottom: 8px;">Aucune création dans cette catégorie</h3>
+        <p style="color: #666; font-size: 13px; margin-bottom: 20px;">Nos ateliers préparent de nouvelles pièces exclusives.</p>
+        <button class="btn --link" onclick="setCollectionFilter('all')">Voir Toutes les Pièces</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function setCollectionFilter(cat, btn) {
+    const tabs = document.querySelectorAll('#collection-filter-tabs .filter-tab');
+    tabs.forEach(t => t.classList.remove('is-active'));
+    
+    if (btn) {
+      btn.classList.add('is-active');
+    } else {
+      const target = document.querySelector(`#collection-filter-tabs [data-filter="${cat}"]`);
+      if (target) target.classList.add('is-active');
+    }
+
+    const cards = document.querySelectorAll('#shopify-product-grid .product-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const cardCat = card.getAttribute('data-category');
+      const cardTitle = card.getAttribute('data-title').toLowerCase();
+      const cardTags = card.getAttribute('data-tags') || '';
+      
+      let match = false;
+      if (cat === 'all') {
+        match = true;
+      } else if (cat === 'MANTEAUX') {
+        match = (cardCat === 'MANTEAUX' || cardTitle.includes('manteco') || cardTitle.includes('trench') || cardTitle.includes('coat') || cardTitle.includes('manteau') || cardTitle.includes('doudoune'));
+      } else if (cat === 'ENSEMBLES') {
+        match = (cardCat === 'ENSEMBLES' || cardTitle.includes('ensemble') || cardTitle.includes('blazer') || cardTitle.includes('suit'));
+      } else if (cat === 'ROBES') {
+        match = (cardCat === 'ROBES' || cardTitle.includes('robe') || cardTitle.includes('dress') || cardTags.includes('robe'));
+      } else if (cat === 'JEANS') {
+        match = (cardCat === 'JEANS' || cardTitle.includes('jeans') || cardTitle.includes('denim') || cardTags.includes('jeans'));
+      } else {
+        match = (cardCat === cat);
+      }
+
+      if (match) {
+        card.style.display = 'flex';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    const emptyMsg = document.getElementById('no-products-msg');
+    if (emptyMsg) {
+      emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    const countBadge = document.getElementById('collection-count-badge');
+    if (countBadge) {
+      countBadge.textContent = `${visibleCount} créations couture`;
+    }
+
+    // Update URL query parameter without full reload
+    if (history.pushState) {
+      const newUrl = cat === 'all' 
+        ? window.location.pathname 
+        : window.location.pathname + '?filter=' + encodeURIComponent(cat);
+      window.history.pushState({ path: newUrl }, '', newUrl);
+    }
+  }
+
+  function sortCollection(val) {
+    const grid = document.getElementById('shopify-product-grid');
+    const cards = Array.from(grid.querySelectorAll('.product-card'));
+
+    cards.sort((a, b) => {
+      const priceA = parseFloat(a.getAttribute('data-price') || 0);
+      const priceB = parseFloat(b.getAttribute('data-price') || 0);
+      const titleA = (a.getAttribute('data-title') || '').toLowerCase();
+      const titleB = (b.getAttribute('data-title') || '').toLowerCase();
+
+      if (val === 'price-asc') return priceA - priceB;
+      if (val === 'price-desc') return priceB - priceA;
+      if (val === 'name-asc') return titleA.localeCompare(titleB);
+      return 0; // default / featured
+    });
+
+    cards.forEach(card => grid.appendChild(card));
+  }
+
+  // Auto-activate filter from URL on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterParam = urlParams.get('filter');
+    if (filterParam) {
+      setCollectionFilter(filterParam.toUpperCase());
+    }
+  });
+</script>

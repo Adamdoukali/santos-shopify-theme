@@ -1,0 +1,27 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Santos Haute Couture",
+    "theme_version": "1.0.0",
+    "theme_author": "Maison Santos",
+    "theme_documentation_url": "https://a9xpr3-x0.myshopify.com",
+    "theme_support_url": "https://a9xpr3-x0.myshopify.com"
+  },
+  {
+    "name": "General Settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "hero_title",
+        "label": "Hero Title",
+        "default": "New Collection Winter 2026-2027"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_threshold",
+        "label": "Free Shipping Threshold (MAD)",
+        "default": "1000"
+      }
+    ]
+  }
+]

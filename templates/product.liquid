@@ -1,0 +1,75 @@
+<main class="section-container" style="padding-top: calc(var(--site-header-height, 60px) + 40px); padding-bottom: 80px;" role="main">
+  <!-- Breadcrumbs -->
+  <nav aria-label="Fil d'ariane" style="font-size: 13px; color: #888; margin-bottom: 24px;">
+    <a href="/" style="color: inherit; text-decoration: none;">Accueil</a> &nbsp;/&nbsp;
+    <a href="/collections/all" style="color: inherit; text-decoration: none;">Collections</a> &nbsp;/&nbsp;
+    <span style="color: #111;">{{ product.title }}</span>
+  </nav>
+
+  <div class="product-detail-grid" style="display: grid; grid-template-columns: 1fr; gap: 40px;">
+    <!-- Product Gallery -->
+    <div>
+      <div style="aspect-ratio: 3/4; overflow: hidden; background-color: #f7f7f7; border-radius: 2px;">
+        <img id="main-product-gallery-img" src="{{ product.featured_image | img_url: '1200x' }}" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ product.title }}">
+      </div>
+      {% if product.images.size > 1 %}
+        <div style="display: flex; gap: 10px; margin-top: 14px; overflow-x: auto; padding-bottom: 6px;">
+          {% for img in product.images %}
+            <img src="{{ img | img_url: '240x' }}" style="width: 70px; height: 90px; object-fit: cover; cursor: pointer; border: 1px solid #ddd; border-radius: 2px;" onclick="document.getElementById('main-product-gallery-img').src='{{ img | img_url: '1200x' }}';" alt="{{ product.title }}">
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Product Info & Purchase -->
+    <div style="display: flex; flex-direction: column;">
+      <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 8px;">Santos Haute Couture</span>
+      <h1 class="ff-heading" style="font-size: 32px; font-weight: 400; margin: 0 0 12px 0; color: #111;">{{ product.title }}</h1>
+      <div style="font-size: 22px; font-weight: 500; color: #222; margin-bottom: 24px;">{{ product.price | money }}</div>
+
+      <!-- Add to Cart Form -->
+      <form action="/cart/add" method="post" id="add-to-cart-form" onsubmit="event.preventDefault(); addToCartAjax(this.id.value);">
+        {% if product.variants.size > 1 %}
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px;">Sélectionnez une option :</label>
+            <select name="id" class="sort-select" style="width: 100%; max-width: 360px; padding: 10px 14px;">
+              {% for variant in product.variants %}
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                  {{ variant.title }} — {{ variant.price | money }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        {% else %}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        {% endif %}
+
+        <button type="submit" class="btn-checkout" style="width: 100%; max-width: 360px; padding: 16px 24px; font-size: 14px; letter-spacing: 0.04em;">
+          Ajouter au Panier Santos
+        </button>
+      </form>
+
+      <!-- Reassurance Points -->
+      <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #555;">
+        <div>✓ Livraison sécurisée partout au Maroc & International</div>
+        <div>✓ Retours & échanges sous 14 jours</div>
+        <div>✓ Confection d'atelier & finitions main</div>
+      </div>
+
+      <!-- Description -->
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #eee; line-height: 1.7; color: #444; font-size: 14px;">
+        <h4 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; color: #111;">Description & Coupe</h4>
+        {{ product.description }}
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+  @media (min-width: 900px) {
+    .product-detail-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 60px !important;
+    }
+  }
+</style>

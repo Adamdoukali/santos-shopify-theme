@@ -1,0 +1,70 @@
+<header id="site-header" class="{% if template.name == 'index' %}header-inverted{% else %}header-scrolled{% endif %}" role="banner">
+  <div class="site-header__wrap">
+    <nav class="site-header__leftNav" aria-label="Main Navigation">
+      <button class="site-header__burger d-xl-none" id="burger-btn" aria-label="Toggle Menu" aria-expanded="false" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="menu d-none d-xl-flex">
+        <li class="menu-item">
+          <a href="/collections/all">Collections</a>
+          <ul>
+            <li><a href="/collections/all">Toutes les pièces (15)</a></li>
+            <li><a href="/collections/all?filter=MANTEAUX">Manteaux & Trenchs</a></li>
+            <li><a href="/collections/ensembles">Ensembles & Tailleurs</a></li>
+            <li><a href="/collections/robes">Robes & Combinaisons</a></li>
+            <li><a href="/collections/all?filter=JEANS">Denim & Jeans</a></li>
+          </ul>
+        </li>
+        <li class="menu-item"><a href="/collections/all?filter=MANTEAUX">Manteaux</a></li>
+        <li class="menu-item"><a href="/collections/ensembles">Ensembles</a></li>
+        <li class="menu-item"><a href="/collections/robes">Robes</a></li>
+        <li class="menu-item"><a href="/collections/all?filter=JEANS">Jeans</a></li>
+      </ul>
+    </nav>
+
+    <figure class="site-header__logo m-0 p-0">
+      <a class="site-header__logoLink" href="/" rel="home">
+        <img class="logo-img-white" src="{{ 'santos-logo-white.png' | asset_url }}" alt="Santos Haute Couture">
+        <img class="logo-img-black" src="{{ 'santos-logo-black.png' | asset_url }}" alt="Santos Haute Couture">
+      </a>
+    </figure>
+
+    <nav class="site-header__rightNav" aria-label="Utility Navigation">
+      <button class="site-header__searchBtn" onclick="openSearch()" aria-label="Search">
+        <span class="d-none d-md-inline">Recherche</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.93 0.35C10.22 0.52 12.84 3.24 12.84 6.57L12.84 6.9C12.76 8.35 12.18 9.68 11.28 10.7L15.97 15.19L15.27 15.91L10.55 11.4C9.48 12.28 8.11 12.81 6.61 12.81L6.29 12.8C3.1 12.64 0.55 10.08 0.39 6.9L0.38 6.57C0.38 3.13 3.17 0.34 6.61 0.34L6.93 0.35Z" fill="currentColor"/></svg>
+      </button>
+
+      <button class="site-header__cartBtn" onclick="openCart()" aria-label="Cart">
+        <span>Panier</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14.49 15.5L13.87 5.29H2.13L1.51 15.5H14.49Z" stroke="currentColor"/><path d="M4.8 4.79V3.72C4.8 1.95 6.23 0.52 8 0.52C9.77 0.52 11.2 1.95 11.2 3.72V4.79" stroke="currentColor"/></svg>
+        <span class="cart-badge" id="header-cart-count">{{ cart.item_count }}</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="site-nav" id="mobile-nav" aria-hidden="true">
+    <div class="site-nav__menu">
+      <div class="menu-item">
+        <a href="/collections/all" onclick="toggleMobileNav()">Collections Santos</a>
+        <ul>
+          <li><a href="/collections/all" onclick="toggleMobileNav()">Toutes les pièces (15)</a></li>
+          <li><a href="/collections/all?filter=MANTEAUX" onclick="toggleMobileNav()">Manteaux & Trenchs (8)</a></li>
+          <li><a href="/collections/ensembles" onclick="toggleMobileNav()">Ensembles & Tailleurs (5)</a></li>
+          <li><a href="/collections/robes" onclick="toggleMobileNav()">Robes & Combinaisons (3)</a></li>
+          <li><a href="/collections/all?filter=JEANS" onclick="toggleMobileNav()">Denim & Jeans</a></li>
+        </ul>
+      </div>
+      <div class="menu-item">
+        <a href="/collections/all?filter=MANTEAUX" onclick="toggleMobileNav()">Manteaux d'Atelier</a>
+      </div>
+      <div class="menu-item">
+        <a href="/collections/ensembles" onclick="toggleMobileNav()">Ensembles Couture</a>
+      </div>
+      <div class="menu-item">
+        <a href="/#about-us" onclick="toggleMobileNav()">La Maison Santos</a>
+      </div>
+    </div>
+  </div>
+</header>

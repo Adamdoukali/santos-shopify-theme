@@ -1,0 +1,19 @@
+<div class="site-header__searchbar" id="search-overlay" aria-hidden="true" style="display: none;">
+  <button class="site-header__searchClose" onclick="closeSearch()" aria-label="Close search">
+    <svg width="14" height="14" viewBox="0 0 11 11" fill="none"><path d="M10.35 0.35L0.35 10.35" stroke="currentColor" stroke-width="1.5"/><path d="M10.35 10.35L0.35 0.35" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <div class="search-form__fieldset">
+    <input type="text" class="search-form__input" id="search-input" placeholder="Rechercher dans la collection Santos..." autocomplete="off" oninput="performSearch(this.value)">
+    <button class="search-form__btn" type="button" onclick="const q = document.getElementById('search-input').value; window.location.href='/search?q=' + encodeURIComponent(q);">Chercher</button>
+  </div>
+  <div class="search-suggestions">
+    <span>Recherches fréquentes:</span>
+    <span class="search-tag" onclick="quickFilter('Manteco')">Manteco</span>
+    <span class="search-tag" onclick="quickFilter('Trench')">Trench</span>
+    <span class="search-tag" onclick="quickFilter('Ensemble')">Ensemble Santos</span>
+    <span class="search-tag" onclick="quickFilter('Blazer')">Blazer ZW</span>
+    <span class="search-tag" onclick="quickFilter('Robe')">Robe Jeans</span>
+    <span class="search-tag" onclick="quickFilter('Lin')">Ensemble Lin</span>
+  </div>
+  <div id="search-results-box" class="products-4col-grid" style="margin-top: 24px; max-height: 400px; overflow-y: auto;"></div>
+</div>
