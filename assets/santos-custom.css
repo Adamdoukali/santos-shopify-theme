@@ -88,6 +88,7 @@ h1, h2, h3, .ff-heading {
 }
 
 .site-header__wrap {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -100,6 +101,7 @@ h1, h2, h3, .ff-heading {
   .site-header__wrap {
     padding: 18px 40px;
     height: 72px;
+    position: relative;
   }
 }
 
@@ -131,16 +133,34 @@ h1, h2, h3, .ff-heading {
   display: block;
 }
 
+/* Logo in Header (Dead Center Alignment) */
+.site-header__logo {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 5 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: auto !important;
+}
+
 /* Logo Link */
 .site-header__logoLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .site-header__logoLink img {
   height: 38px;
   width: auto;
+  display: block;
   transition: transform 0.3s ease;
 }
 @media (min-width: 1200px) {
@@ -153,13 +173,25 @@ h1, h2, h3, .ff-heading {
 }
 
 /* Navigation Menus */
-.site-header__leftNav,
+.site-header__leftNav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  z-index: 10;
+}
+
 .site-header__rightNav {
   display: flex;
   align-items: center;
   gap: 24px;
   font-size: 14px;
   font-weight: 500;
+  position: relative;
+  z-index: 10;
+  margin-left: auto;
 }
 
 .menu {
