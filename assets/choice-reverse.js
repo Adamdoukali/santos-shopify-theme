@@ -611,6 +611,65 @@ function showChoiceToast(msg) {
   }, 2800);
 }
 
+/**
+ * Export Stored Orders to Delivery Tracking CSV
+ */
+function exportDeliveryCsv() {
+  const orders = JSON.parse(localStorage.getItem('santos_orders') || '[]');
+  if (orders.length === 0) {
+    showChoiceToast('Aucune commande enregistrée en local. Utilisez santos_delivery_tracking.csv.');
+    window.location.href = 'santos_delivery_tracking.csv';
+    return;
+  }
+
+  const headers = [
+    'Tracking_Number', 'Order_ID', 'Date', 'Customer_Name', 'Phone',
+    'City', 'Address', 'Product', 'Quantity', 'COD_Amount_MAD',
+    'Carrier', 'Delivery_Status', 'Payment_Status', 'Notes'
+  ];
+
+  const rows = orders.map((o, idx) => {
+    const trk = 'SN-TRK-' + (784024 + idx);
+    const client = `${o.customer?.firstName || ''} ${o.customer?.lastName || ''}`.trim();
+    let productDesc = '';
+    if (o.item) {
+      if (o.item.cartItems && o.item.cartItems.length > 0) {
+        productDesc = o.item.cartItems.map(it => `${it.qty}x ${it.name} (${it.size || 'M'}, ${it.color || ''})`).join(' + ');
+      } else {
+        productDesc = `${o.item.title || ''} (${o.item.size || 'M'}, ${o.item.color || ''})`;
+      }
+    }
+    const cleanTotal = (o.total || '0').replace(/[^\d.]/g, '');
+
+    return [
+      trk,
+      o.orderId || ('SN-' + (100000 + idx)),
+      o.date ? new Date(o.date).toISOString().replace('T', ' ').slice(0, 16) : '',
+      `"${client.replace(/"/g, '""')}"`,
+      `"${o.customer?.phone || ''}"`,
+      `"${o.customer?.city || ''}"`,
+      `"${(o.customer?.address || '').replace(/"/g, '""')}"`,
+      `"${productDesc.replace(/"/g, '""')}"`,
+      o.quantity || 1,
+      cleanTotal,
+      'Cathedis Express',
+      'En attente de confirmation',
+      'À encaisser à la livraison',
+      '"Commande passée via EasySell COD"'
+    ];
+  });
+
+  const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `santos_livraisons_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 // Global Exports
 window.createChoiceCardHtml = createChoiceCardHtml;
 window.initChoiceExperience = initChoiceExperience;
@@ -625,3 +684,4 @@ window.switchCardColor = switchCardColor;
 window.setChoiceCategory = setChoiceCategory;
 window.toggleChoiceShowAll = toggleChoiceShowAll;
 window.openChoiceQuickView = openChoiceQuickView;
+window.exportDeliveryCsv = exportDeliveryCsv;
