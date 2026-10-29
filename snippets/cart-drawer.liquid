@@ -50,7 +50,14 @@
         <span>Sous-total</span>
         <span id="cart-drawer-subtotal">{{ cart.total_price | money }}</span>
       </div>
-      <a href="/checkout" class="btn-checkout" style="display:block; text-align:center; text-decoration:none;">Commander en Toute Sécurité</a>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button type="button" class="choice-cod-submit-btn" style="margin-top: 0; width: 100%;" onclick="handleShopifyCodCheckout()">
+          Paiement à la Livraison (COD)
+        </button>
+        <a href="/checkout" class="btn-checkout" style="display:block; text-align:center; text-decoration:none; background:#ffffff; color:#111111; border: 1.5px solid #111111;">
+          Paiement en Ligne (Carte)
+        </a>
+      </div>
     </div>
   </div>
 </div>

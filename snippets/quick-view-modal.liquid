@@ -8,12 +8,15 @@
       <input type="hidden" id="modal-variant-id" value="">
       <h2 class="modal-title ff-heading" id="modal-product-title"></h2>
       <div class="modal-price" id="modal-product-price"></div>
-      <div id="modal-product-desc" style="color: #666; font-size: 13px; line-height: 1.6; margin-bottom: 20px;"></div>
-      <div style="display: flex; gap: 10px; margin-top: auto;">
-        <button class="btn-checkout" style="flex: 1;" onclick="addToCartAjax(document.getElementById('modal-variant-id').value)">
+      <div id="modal-product-desc" style="color: #666; font-size: 13px; line-height: 1.6; margin-bottom: 16px;"></div>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+        <button class="btn-checkout" style="width: 100%;" onclick="addToCartAjax(document.getElementById('modal-variant-id').value)">
           Ajouter au Panier Santos
         </button>
-        <a id="modal-product-link" href="#" class="btn --link" style="display: inline-flex; align-items: center; justify-content: center; padding: 12px 16px; border: 1px solid #111; text-decoration: none; font-size: 13px;">
+        <button class="choice-cod-submit-btn" type="button" style="margin-top: 0; width: 100%;" onclick="buyShopifyModalItemCod()">
+          Acheter avec paiement à la livraison
+        </button>
+        <a id="modal-product-link" href="#" class="btn --link" style="display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border: 1px solid #111; text-decoration: none; font-size: 12px; letter-spacing: 0.04em;">
           Fiche Détaillée
         </a>
       </div>

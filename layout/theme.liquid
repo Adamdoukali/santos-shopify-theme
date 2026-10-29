@@ -12,12 +12,14 @@
 
   {{ 'app_style_balmoral.css' | asset_url | stylesheet_tag }}
   {{ 'santos-custom.css' | asset_url | stylesheet_tag }}
+  {{ 'choice-reverse.css' | asset_url | stylesheet_tag }}
 
   {{ content_for_header }}
 </head>
 <body class="template-{{ template.name }}">
 
   {% section 'header' %}
+  {% render 'choice-ticker' %}
 
   <main role="main" id="MainContent">
     {{ content_for_layout }}
@@ -28,7 +30,9 @@
   {% render 'cart-drawer' %}
   {% render 'search-drawer' %}
   {% render 'quick-view-modal' %}
+  {% render 'choice-cod-modal' %}
 
   {{ 'santos-theme.js' | asset_url | script_tag }}
+  {{ 'choice-reverse.js' | asset_url | script_tag }}
 </body>
 </html>

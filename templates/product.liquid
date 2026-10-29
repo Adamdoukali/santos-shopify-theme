@@ -47,7 +47,29 @@
         <button type="submit" class="btn-checkout" style="width: 100%; max-width: 360px; padding: 16px 24px; font-size: 14px; letter-spacing: 0.04em;">
           Ajouter au Panier Santos
         </button>
+        <button type="button" class="choice-cod-submit-btn" style="width: 100%; max-width: 360px; margin-top: 10px; padding: 16px 24px; font-size: 14px;" onclick="openProductCodCheckout()">
+          Acheter avec paiement à la livraison
+        </button>
       </form>
+
+      <script>
+        function openProductCodCheckout() {
+          if (typeof openCodCheckout === 'function') {
+            const title = {{ product.title | json }};
+            const price = {{ product.price | divided_by: 100.0 }};
+            const img = {{ product.featured_image | img_url: '800x' | json }};
+            const selectEl = document.querySelector('select[name="id"]');
+            const variantTitle = selectEl ? selectEl.options[selectEl.selectedIndex].text.split('—')[0].trim() : 'Unique';
+            openCodCheckout({
+              title: title,
+              price: price,
+              img: img,
+              size: variantTitle,
+              color: 'Standard'
+            });
+          }
+        }
+      </script>
 
       <!-- Reassurance Points -->
       <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #555;">

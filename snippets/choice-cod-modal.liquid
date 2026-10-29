@@ -1,0 +1,207 @@
+<!-- CHOICEWOMEN REVERSE-ENGINEERED EASYSELL COD CHECKOUT MODAL -->
+<div class="choice-cod-overlay" id="choice-cod-modal-overlay" aria-hidden="true">
+  <div class="choice-cod-modal" role="dialog" aria-modal="true" aria-labelledby="cod-modal-title">
+    <!-- Header Notice Bar -->
+    <div class="choice-cod-header">
+      <p id="cod-modal-title">Commandez et payez à la livraison avec possibilité d'échange gratuit et de remboursement</p>
+      <button type="button" class="choice-cod-close" onclick="closeCodCheckout()" aria-label="Fermer">✕</button>
+    </div>
+
+    <!-- Main Form & Content -->
+    <div class="choice-cod-body" id="choice-cod-form-container">
+      <!-- Selected Item Card -->
+      <div class="choice-cod-product-item">
+        <div class="choice-cod-thumb-wrap">
+          <img id="cod-item-thumb" class="choice-cod-thumb" src="" alt="Aperçu produit">
+          <span class="choice-cod-qty-badge" id="cod-item-qty-badge">1</span>
+        </div>
+        <div class="choice-cod-product-details">
+          <div class="choice-cod-product-name" id="cod-item-title">Produit Santos</div>
+          <div class="choice-cod-product-variant" id="cod-item-variant">Noir / M</div>
+        </div>
+        <div class="choice-cod-product-price" id="cod-item-price">0.00 dh</div>
+      </div>
+
+      <!-- Quantity Bundle Offers (Choice EasySell Multi-Pack Deals) -->
+      <div class="choice-cod-bundle-section">
+        <h4 class="choice-cod-bundle-title">Offres spéciales multi-pièces :</h4>
+        <div class="choice-bundle-options">
+          <div class="choice-bundle-card is-active" onclick="selectBundle(1, this)">
+            <div class="choice-bundle-left">
+              <div class="choice-bundle-radio"></div>
+              <div>
+                <span class="choice-bundle-name">Acheter 1 pièce</span>
+              </div>
+            </div>
+            <div class="choice-bundle-price" id="bundle-price-1">0.00 dh</div>
+          </div>
+
+          <div class="choice-bundle-card" onclick="selectBundle(2, this)">
+            <div class="choice-bundle-left">
+              <div class="choice-bundle-radio"></div>
+              <div>
+                <span class="choice-bundle-name">Prenez 2 pièces</span>
+                <span class="choice-bundle-badge">Save 15%</span>
+              </div>
+            </div>
+            <div class="choice-bundle-price" id="bundle-price-2">0.00 dh</div>
+          </div>
+
+          <div class="choice-bundle-card" onclick="selectBundle(3, this)">
+            <div class="choice-bundle-left">
+              <div class="choice-bundle-radio"></div>
+              <div>
+                <span class="choice-bundle-name">Prenez 3 pièces</span>
+                <span class="choice-bundle-badge">Save 20% • Populaire</span>
+              </div>
+            </div>
+            <div class="choice-bundle-price" id="bundle-price-3">0.00 dh</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Breakdown -->
+      <div class="choice-cod-summary-box">
+        <div class="choice-cod-summary-row">
+          <span>Sous-total</span>
+          <span id="cod-summary-subtotal">0.00 dh</span>
+        </div>
+        <div class="choice-cod-summary-row" id="cod-discount-row" style="display: none; color: #b91c1c;">
+          <span>Remise</span>
+          <span id="cod-discount-val">-0.00 dh</span>
+        </div>
+        <div class="choice-cod-summary-row">
+          <span>Expédition</span>
+          <span id="cod-shipping">Gratuit</span>
+        </div>
+        <div class="choice-cod-summary-row total-row">
+          <span>Total</span>
+          <span id="cod-total">0.00 dh</span>
+        </div>
+      </div>
+
+      <!-- Coupon Code Row -->
+      <div class="choice-cod-coupon-wrap">
+        <input type="text" class="choice-cod-coupon-input" id="cod-coupon-input" placeholder="Code promo (ex: SANTOS10)">
+        <button type="button" class="choice-cod-coupon-btn" onclick="applyCodCoupon()">Appliquer</button>
+      </div>
+
+      <!-- SMS / WhatsApp Opt-in Notice -->
+      <label class="choice-cod-optin">
+        <input type="checkbox" id="cod-optin" checked>
+        <span>Envoyez-moi des mises à jour sur l'expédition par WhatsApp & SMS</span>
+      </label>
+
+      <!-- Customer Checkout Form -->
+      <form class="choice-cod-form" id="choice-cod-form" onsubmit="submitCodOrder(event)">
+        <div class="choice-cod-field-group">
+          <label class="choice-cod-field-label">Prénom <span class="req">*</span></label>
+          <div class="choice-cod-input-wrap">
+            <span class="choice-cod-input-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <input type="text" class="choice-cod-input" id="cod-first-name" placeholder="PRÉNOM" required>
+          </div>
+        </div>
+
+        <div class="choice-cod-field-group">
+          <label class="choice-cod-field-label">Nom <span class="req">*</span></label>
+          <div class="choice-cod-input-wrap">
+            <span class="choice-cod-input-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <input type="text" class="choice-cod-input" id="cod-last-name" placeholder="NOM" required>
+          </div>
+        </div>
+
+        <div class="choice-cod-field-group">
+          <label class="choice-cod-field-label">Téléphone <span class="req">*</span></label>
+          <div class="choice-cod-input-wrap">
+            <span class="choice-cod-input-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </span>
+            <input type="tel" class="choice-cod-input" id="cod-phone" placeholder="06 XX XX XX XX" required>
+          </div>
+        </div>
+
+        <div class="choice-cod-field-group">
+          <label class="choice-cod-field-label">Ville <span class="req">*</span></label>
+          <div class="choice-cod-input-wrap">
+            <span class="choice-cod-input-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </span>
+            <select class="choice-cod-input" id="cod-city-select" required>
+              <option value="" disabled selected>Sélectionnez votre ville</option>
+              <option value="Casablanca">Casablanca</option>
+              <option value="Rabat">Rabat</option>
+              <option value="Marrakech">Marrakech</option>
+              <option value="Tanger">Tanger</option>
+              <option value="Fès">Fès</option>
+              <option value="Agadir">Agadir</option>
+              <option value="Meknès">Meknès</option>
+              <option value="Oujda">Oujda</option>
+              <option value="Kénitra">Kénitra</option>
+              <option value="Tétouan">Tétouan</option>
+              <option value="Mohammédia">Mohammédia</option>
+              <option value="El Jadida">El Jadida</option>
+              <option value="Autre">Autre ville au Maroc</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="choice-cod-field-group">
+          <label class="choice-cod-field-label">Adresse <span class="req">*</span></label>
+          <div class="choice-cod-input-wrap">
+            <span class="choice-cod-input-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </span>
+            <input type="text" class="choice-cod-input" id="cod-address" placeholder="Quartier, Rue, N° d'appartement ou maison" required>
+          </div>
+        </div>
+
+        <!-- Big Green Cash On Delivery Submit Button -->
+        <button type="submit" class="choice-cod-submit-btn" id="cod-submit-btn">
+          Terminez votre achat - 0.00 dh
+        </button>
+      </form>
+
+      <!-- Moroccan Trust & Security Badges -->
+      <div class="choice-cod-badges">
+        <div class="choice-cod-badge-item">
+          <span class="choice-cod-badge-icon">🚚</span>
+          <div><strong>Livraison Rapide</strong><br>24h à 48h partout au Maroc</div>
+        </div>
+        <div class="choice-cod-badge-item">
+          <span class="choice-cod-badge-icon">💵</span>
+          <div><strong>Paiement à la Livraison</strong><br>Réglez uniquement à réception</div>
+        </div>
+        <div class="choice-cod-badge-item">
+          <span class="choice-cod-badge-icon">🔄</span>
+          <div><strong>Échange Facile</strong><br>Garantie 7 jours sans frais</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success View State -->
+    <div class="choice-cod-success" id="choice-cod-success">
+      <div class="choice-success-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h3 class="choice-success-title">🎉 Votre commande a été passée avec succès !</h3>
+      <p class="choice-success-desc">
+        Merci de votre confiance. Notre équipe de conciergerie Maison Santos prépare votre colis avec le plus grand soin.
+      </p>
+
+      <div class="choice-success-card">
+        <div><strong>Numéro de commande :</strong> <span id="success-order-num">#SN-000000</span></div>
+        <div><strong>Montant Total :</strong> <span id="success-order-total">0.00 dh</span></div>
+        <div><strong>Destinataire :</strong> <span id="success-order-client">-</span></div>
+      </div>
+
+      <a href="#" target="_blank" rel="noopener" class="choice-whatsapp-btn" id="success-wa-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.983.538 1.83.824 2.791.825 3.184 0 5.77-2.587 5.771-5.768 0-3.181-2.587-5.77-5.772-5.771zm3.376 8.207c-.14.394-.813.738-1.127.785-.295.043-.68.068-1.954-.457-1.442-.596-2.39-2.033-2.463-2.13-.07-.098-.59-.785-.59-1.498 0-.712.373-1.061.506-1.206.133-.145.291-.182.388-.182.097 0 .195.002.279.006.09.004.21.033.328.318.123.298.423 1.031.459 1.106.037.075.061.163.012.261-.049.098-.073.16-.145.245-.073.084-.153.188-.219.252-.073.072-.15.15-.064.298.086.147.382.631.819 1.02.563.501 1.039.657 1.186.73.148.073.234.062.321-.039.088-.1.374-.436.474-.585.1-.15.2-.125.333-.075.133.049.845.398.991.471.145.073.242.11.278.172.037.062.037.359-.103.753z"/></svg>
+        Confirmer instantanément sur WhatsApp
+      </a>
+    </div>
+  </div>
+</div>

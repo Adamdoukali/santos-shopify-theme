@@ -299,12 +299,67 @@
     }, { passive: true });
   }
 
+  // --- EasySell COD Handlers for Theme ---
+  window.buyShopifyModalItemCod = function () {
+    const titleEl = document.getElementById('modal-product-title');
+    const priceEl = document.getElementById('modal-product-price');
+    const imgEl = document.getElementById('modal-main-image');
+    if (!titleEl) return;
+
+    const title = titleEl.textContent;
+    const priceText = priceEl ? priceEl.textContent.replace(/[^\d.]/g, '') : '0';
+    const price = parseFloat(priceText) || 0;
+    const img = imgEl ? imgEl.src : '';
+
+    if (typeof closeQuickView === 'function') closeQuickView();
+    if (typeof openCodCheckout === 'function') {
+      openCodCheckout({
+        title: title,
+        price: price,
+        img: img,
+        size: 'Standard',
+        color: 'Unique'
+      });
+    }
+  };
+
+  window.handleShopifyCodCheckout = function () {
+    fetch('/cart.js')
+      .then(res => res.json())
+      .then(cart => {
+        if (!cart || cart.item_count === 0) {
+          alert('Votre panier est actuellement vide.');
+          return;
+        }
+        if (typeof closeCart === 'function') closeCart();
+
+        const items = (cart.items || []).map(it => ({
+          name: it.product_title || it.title,
+          price: (it.final_price || it.price) / 100,
+          qty: it.quantity,
+          img: it.featured_image ? it.featured_image.url : (it.image || ''),
+          size: it.variant_title || 'Unique',
+          color: ''
+        }));
+
+        window.cart = items;
+        if (typeof openCodCheckout === 'function') {
+          openCodCheckout();
+        }
+      })
+      .catch(() => {
+        if (typeof closeCart === 'function') closeCart();
+        if (typeof openCodCheckout === 'function') openCodCheckout();
+      });
+  };
+
   // --- Keyboard Shortcuts (ESC to close) ---
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       window.closeCart();
       window.closeSearch();
       window.closeQuickView();
+      if (typeof closeCodCheckout === 'function') closeCodCheckout();
       const nav = document.getElementById('mobile-nav');
       if (nav && nav.classList.contains('is-open')) window.toggleMobileNav();
     }

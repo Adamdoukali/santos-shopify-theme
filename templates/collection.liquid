@@ -54,7 +54,7 @@
     </div>
 
     <!-- Compact 4-Card Responsive Product Grid -->
-    <div class="product-grid" id="shopify-product-grid">
+    <div class="choice-grid" id="shopify-product-grid">
       {% for product in collection.products %}
         {% assign cat = 'TOPS | BODYS' %}
         {% assign badge_text = 'Santos' %}
@@ -83,32 +83,35 @@
           {% assign card_image = product.images.first %}
         {% endif %}
 
-        <article class="product-card" data-category="{{ cat }}" data-title="{{ product.title | escape }}" data-price="{{ product.price }}" data-tags="{{ product.tags | join: ',' | downcase }}" data-handle="{{ product.handle }}">
-          <a href="{{ product.url }}" class="product-card__thumbnail">
-            <span class="product-card__badge">{{ badge_text }}</span>
+        <article class="choice-card" data-category="{{ cat }}" data-title="{{ product.title | escape }}" data-price="{{ product.price }}" data-tags="{{ product.tags | join: ',' | downcase }}" data-handle="{{ product.handle }}" onclick="if(window.openQuickView){ openQuickView('{{ product.handle }}'); } else { window.location.href='{{ product.url }}'; }">
+          <div class="choice-card__media">
+            {% if product.compare_at_price > product.price %}
+              <span class="choice-card__badge">Promo</span>
+            {% elsif badge_text != blank %}
+              <span class="choice-card__badge" style="background: rgba(18,18,18,0.85);">{{ badge_text }}</span>
+            {% endif %}
+            
             {% if card_image != blank %}
-              <img class="product-card__img" src="{{ card_image | img_url: '600x' }}" alt="{{ product.title | escape }}" loading="lazy">
+              <img class="choice-card__img" src="{{ card_image | img_url: '600x' }}" alt="{{ product.title | escape }}" loading="lazy">
             {% else %}
-              {% if t contains 'trensh' %}
-                <img class="product-card__img" src="{{ '10022082576674_0_DSC00933.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
-              {% elsif t contains 'vale jacket' or t contains 'true avenue' %}
-                <img class="product-card__img" src="{{ '10018427765026_0_DSC00521.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
-              {% elsif t contains 'fleece' or t contains 'magic' %}
-                <img class="product-card__img" src="{{ '10018397782306_0_DSC00819.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
-              {% else %}
-                <img class="product-card__img" src="{{ '10022106595618_0_DSC00749.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
-              {% endif %}
+              <img class="choice-card__img" src="{{ '10022106595618_0_DSC00749.jpg' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy">
             {% endif %}
 
-            <button class="product-card__quickadd" type="button" onclick="event.preventDefault(); if(window.openQuickView) { openQuickView('{{ product.handle }}'); } else { window.location.href='{{ product.url }}'; }">
+            <button class="choice-card__quick-add" type="button" onclick="event.stopPropagation(); if(window.openQuickView) { openQuickView('{{ product.handle }}'); } else { window.location.href='{{ product.url }}'; }">
               Aperçu Rapide
             </button>
-          </a>
-          <div class="product-card__content">
-            <h3 class="product-card__title">
-              <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">{{ product.title }}</a>
-            </h3>
-            <p class="product-card__price">{{ product.price | money }}</p>
+          </div>
+
+          <div class="choice-card__info">
+            <h3 class="choice-card__title" title="{{ product.title | escape }}">{{ product.title }}</h3>
+            <div class="choice-card__price-row">
+              {% if product.compare_at_price > product.price %}
+                <span class="choice-card__price-compare">{{ product.compare_at_price | money }}</span>
+                <span class="choice-card__price-sale">{{ product.price | money }}</span>
+              {% else %}
+                <span class="choice-card__price-regular">{{ product.price | money }}</span>
+              {% endif %}
+            </div>
           </div>
         </article>
       {% endfor %}
@@ -135,7 +138,7 @@
       if (target) target.classList.add('is-active');
     }
 
-    const cards = document.querySelectorAll('#shopify-product-grid .product-card');
+    const cards = document.querySelectorAll('#shopify-product-grid .choice-card');
     let visibleCount = 0;
 
     cards.forEach(card => {
@@ -187,7 +190,7 @@
 
   function sortCollection(val) {
     const grid = document.getElementById('shopify-product-grid');
-    const cards = Array.from(grid.querySelectorAll('.product-card'));
+    const cards = Array.from(grid.querySelectorAll('.choice-card'));
 
     cards.sort((a, b) => {
       const priceA = parseFloat(a.getAttribute('data-price') || 0);
